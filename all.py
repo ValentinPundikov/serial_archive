@@ -18,17 +18,16 @@ chat_id = '869031863'
 
 
 current_datetime = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-output_tar_gz_path = os.path.join(output_base_path, f'serial_logs_{current_datetime}.tar.gz')
+output_tar_gz_path = os.path.join(output_base_path, f'all_logs_{current_datetime}.tar.gz')
 
 
 try:
     with tarfile.open(output_tar_gz_path, "w:gz") as tar:
         for root, dirs, files in os.walk(file_path):
             for file in files:
-                if file.startswith('serial'):
-                    file_path = os.path.join(root, file)
-                    tar.add(file_path, arcname=file)
-                    logger.info(f"Архивирую файл: {file_path}")
+                file_path = os.path.join(root, file)
+                tar.add(file_path, arcname=file)
+                logger.info(f"Архивирую файл: {file_path}")
     logger.info(f"Архивация завершена. Результат сохранён в: {output_tar_gz_path}")
 except Exception as e:
     logger.error(f"Ошибка при создании архива: {e}")
@@ -36,7 +35,7 @@ except Exception as e:
 
 try:
     url = f"https://api.telegram.org/bot{bot_token}/sendDocument"
-    caption_text = "7711"
+    caption_text = "#2308"
     with open(output_tar_gz_path, 'rb') as file:
         files = {'document': file}
         response = requests.post(url, files=files, data={'chat_id': chat_id, 'caption': caption_text})
